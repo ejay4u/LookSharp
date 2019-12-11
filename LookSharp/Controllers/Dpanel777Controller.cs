@@ -214,7 +214,7 @@ namespace LookSharp.Controllers
             var countryList = country.Select(x => new SelectListItem() { Value = x, Text = x }).ToList();
 
             //Create campaignNetwork List
-            List<string> campaignNetwork = new List<string>(new[] { "MTN GH", "VODAFONE GH", "AIRTEL GH", "TIGO GH", "COMVIQ SE" });
+            List<string> campaignNetwork = new List<string>(new[] { "MTN GH", "VODAFONE GH", "AIRTEL GH", "TIGO GH" });
             var campaignNetworkList = campaignNetwork.Select(x => new SelectListItem() { Value = x, Text = x }).ToList();
 
             var viewModel = new CampaignViewModel
@@ -260,14 +260,6 @@ namespace LookSharp.Controllers
                         {
                             campaign.CampaignNetwork.Add("+23326");
                         }
-
-                        if (network == "COMVIQ SE")
-                        {
-                            campaign.CampaignNetwork.Add("+4673");
-                            campaign.CampaignNetwork.Add("+4676");
-                            campaign.CampaignNetwork.Add("+4670");
-                            campaign.CampaignNetwork.Add("+4679");
-                        }
                     }
                 }
 
@@ -276,6 +268,9 @@ namespace LookSharp.Controllers
                 var ccode = allRegions.FirstOrDefault(region => region.EnglishName == campaign.CampaignCountry.ElementAt(0))?.TwoLetterISORegionName;
                 if (ccode.IsNullOrWhiteSpace())
                     ccode = "gh";
+
+                campaign.StartTime = campaign.StartTime.ToLocalTime();
+                campaign.EndTime = campaign.EndTime.ToLocalTime();
 
                 campaign.CampaignCountryCode = ccode;
                 int codeQty = campaign.CampaignCodeQty;
@@ -328,14 +323,6 @@ namespace LookSharp.Controllers
                         {
                             campaign.CampaignNetwork.Add("+23326");
                         }
-
-                        if (network == "COMVIQ SE")
-                        {
-                            campaign.CampaignNetwork.Add("+4673");
-                            campaign.CampaignNetwork.Add("+4676");
-                            campaign.CampaignNetwork.Add("+4670");
-                            campaign.CampaignNetwork.Add("+4679");
-                        }
                     }
                 }
 
@@ -344,6 +331,9 @@ namespace LookSharp.Controllers
                 var ccode = allRegions.FirstOrDefault(region => region.EnglishName == campaign.CampaignCountry.ElementAt(0))?.TwoLetterISORegionName;
                 if (ccode.IsNullOrWhiteSpace())
                     ccode = "gh";
+
+                campaign.StartTime = campaign.StartTime.ToLocalTime();
+                campaign.EndTime = campaign.EndTime.ToLocalTime();
 
                 campaign.Id = ObjectId.Parse(campaignViewModel.Id);
                 campaign.TimeUpdated = DateTime.Now;
@@ -357,13 +347,16 @@ namespace LookSharp.Controllers
                 return RedirectToAction("Campaign");
             }
 
-
+            
         }
 
         public ActionResult EditCampaign(string id)
         {
             var filter = Builders<Campaign>.Filter.Eq("_id", ObjectId.Parse(id));
             var campaign = _dbContext.Campaigns.Find(filter).First();
+
+            campaign.StartTime = campaign.StartTime.ToLocalTime();
+            campaign.EndTime = campaign.EndTime.ToLocalTime();
 
             var filter2 = Builders<Business>.Filter.Empty;
             var projection = Builders<Business>.Projection.Include("AccountId").Include("BusinessName");
@@ -400,7 +393,7 @@ namespace LookSharp.Controllers
             var countryList = country.Select(x => new SelectListItem() { Value = x, Text = x }).ToList();
 
             //Create campaignNetwork List
-            List<string> campaignNetwork = new List<string>(new[] { "MTN GH", "VODAFONE GH", "AIRTEL GH", "TIGO GH", "COMVIQ SE" });
+            List<string> campaignNetwork = new List<string>(new[] { "MTN GH", "VODAFONE GH", "AIRTEL GH", "TIGO GH" });
             var campaignNetworkList = campaignNetwork.Select(x => new SelectListItem() { Value = x, Text = x }).ToList();
 
 
@@ -430,12 +423,6 @@ namespace LookSharp.Controllers
                         selcampaignList.Add("AIRTEL GH");
 
                     }
-
-                    if (network.Contains("+4673") || network.Contains("+4676") || network.Contains("+4670") || network.Contains("+4679"))
-                    {
-                        selcampaignList.Add("COMVIQ SE");
-
-                    }
                 }
             }
 
@@ -449,7 +436,7 @@ namespace LookSharp.Controllers
                 Id = campaign.Id.ToString()
             };
 
-            return View("Campaign", campaignviewModel);
+            return View("Campaign",campaignviewModel);
         }
 
         public ActionResult CampaignDetails(string id)
