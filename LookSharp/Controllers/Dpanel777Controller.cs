@@ -269,8 +269,8 @@ namespace LookSharp.Controllers
                 if (ccode.IsNullOrWhiteSpace())
                     ccode = "gh";
 
-                campaign.StartTime = campaign.StartTime.ToLocalTime();
-                campaign.EndTime = campaign.EndTime.ToLocalTime();
+                campaign.StartTime = campaign.StartTime.ToUniversalTime();
+                campaign.EndTime = campaign.EndTime.ToUniversalTime();
 
                 campaign.CampaignCountryCode = ccode;
                 int codeQty = campaign.CampaignCodeQty;
@@ -332,8 +332,8 @@ namespace LookSharp.Controllers
                 if (ccode.IsNullOrWhiteSpace())
                     ccode = "gh";
 
-                campaign.StartTime = campaign.StartTime.ToLocalTime();
-                campaign.EndTime = campaign.EndTime.ToLocalTime();
+                campaign.StartTime = campaign.StartTime.ToUniversalTime();
+                campaign.EndTime = campaign.EndTime.ToUniversalTime();
 
                 campaign.Id = ObjectId.Parse(campaignViewModel.Id);
                 campaign.TimeUpdated = DateTime.Now;
@@ -354,9 +354,6 @@ namespace LookSharp.Controllers
         {
             var filter = Builders<Campaign>.Filter.Eq("_id", ObjectId.Parse(id));
             var campaign = _dbContext.Campaigns.Find(filter).First();
-
-            campaign.StartTime = campaign.StartTime.ToLocalTime();
-            campaign.EndTime = campaign.EndTime.ToLocalTime();
 
             var filter2 = Builders<Business>.Filter.Empty;
             var projection = Builders<Business>.Projection.Include("AccountId").Include("BusinessName");
