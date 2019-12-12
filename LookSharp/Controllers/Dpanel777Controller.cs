@@ -355,6 +355,9 @@ namespace LookSharp.Controllers
             var filter = Builders<Campaign>.Filter.Eq("_id", ObjectId.Parse(id));
             var campaign = _dbContext.Campaigns.Find(filter).First();
 
+            campaign.StartTime = campaign.StartTime.ToUniversalTime();
+            campaign.EndTime = campaign.EndTime.ToUniversalTime();
+
             var filter2 = Builders<Business>.Filter.Empty;
             var projection = Builders<Business>.Projection.Include("AccountId").Include("BusinessName");
             var businesses = _dbContext.Businesses.Find(filter2).Project(projection).ToEnumerable();

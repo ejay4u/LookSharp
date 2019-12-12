@@ -77,8 +77,8 @@ namespace LookSharp.Controllers
                         AdType = adInfo.AdType,
                         VideoUrl = adInfo.AdMedia.GetElement("VideoUrl").Value.ToString(),
                         VideoHost = adInfo.AdMedia.GetElement("VideoHost").Value.ToString(),
-                        StartTime = lookSharp.StartTime.AddHours(-1),
-                        EndTime = lookSharp.EndTime.AddHours(-1)
+                        StartTime = lookSharp.StartTime,
+                        EndTime = lookSharp.EndTime
                     };
                     pAd.Add(ad);
 
@@ -258,7 +258,8 @@ namespace LookSharp.Controllers
 
                 //NOTE: GET USER'S TIME FOR TIME COMPARISON
                 var builder = Builders<Campaign>.Filter;
-                var filter = builder.Eq("CampaignCountry", userCountry.Result) & builder.Gt("EndTime", DateTime.Parse(userTime)) & builder.Eq("CampaignTitle", "LookSharp") & builder.Eq("CampaignStatus", true);
+                //var filter = builder.Eq("CampaignCountry", userCountry.Result) & builder.Gt("EndTime", DateTime.Parse(userTime)) & builder.Eq("CampaignTitle", "LookSharp") & builder.Eq("CampaignStatus", true);
+                var filter = builder.Eq("CampaignCountry", userCountry.Result) & builder.Gt("EndTime", DateTime.Parse(userTime)) &  builder.Eq("CampaignStatus", true);
                 var lookSharp = _dbContext.Campaigns.Find(filter).FirstOrDefault();
 
                 if (lookSharp == null)
